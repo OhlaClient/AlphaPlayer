@@ -22,8 +22,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.view.backgroundColor = [UIColor blackColor];
     self.startBtn = [[UIButton alloc] initWithFrame:CGRectMake(100, 100, 60, 60)];
-    self.startBtn.backgroundColor = [UIColor orangeColor];
+    self.startBtn.backgroundColor = [UIColor redColor];
     [self.startBtn setTitle:@"start" forState:UIControlStateNormal];
     [self.startBtn addTarget:self action:@selector(startBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.startBtn];
@@ -35,17 +36,20 @@
     [self.view addSubview:self.stopBtn];
 }
 
-- (void)startBtnClicked:(UIButton *)sender
-{
+- (void)startBtnClicked:(UIButton *)sender {
     if (!self.metalView) {
         self.metalView = [[BDAlphaPlayerMetalView alloc] initWithDelegate:self];
-        self.metalView.userInteractionEnabled = true;
-        [self.view insertSubview:self.metalView atIndex:0];
+        self.metalView.userInteractionEnabled = false;
+        // [self.view insertSubview:self.metalView atIndex:0];
+        [self.view addSubview:self.metalView];
     }
     
     BDAlphaPlayerMetalConfiguration *configuration = [BDAlphaPlayerMetalConfiguration defaultConfiguration];
     NSString *testResourcePath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"TestResource"];
-    NSString *directory = [testResourcePath stringByAppendingPathComponent:@"heartbeats"];
+    
+    NSString *sourceName = arc4random() % 2 == 0 ? @"test" : @"heartbeats";
+    
+    NSString *directory = [testResourcePath stringByAppendingPathComponent:sourceName];
     configuration.directory = directory;
     configuration.renderSuperViewFrame = self.view.frame;
     configuration.orientation = BDAlphaPlayerOrientationPortrait;
@@ -53,15 +57,13 @@
     [self.metalView playWithMetalConfiguration:configuration];
 }
 
-- (void)stopBtnClicked:(UIButton *)sender
-{
+- (void)stopBtnClicked:(UIButton *)sender {
     [self.metalView stopWithFinishPlayingCallback];
     [self.metalView removeFromSuperview];
     self.metalView = nil;
 }
 
-- (void)metalView:(BDAlphaPlayerMetalView *)metalView didFinishPlayingWithError:(NSError *)error
-{
+- (void)metalView:(BDAlphaPlayerMetalView *)metalView didFinishPlayingWithError:(NSError *)error {
     if (error) {
         NSLog(@"%@", error.localizedDescription);
     }
