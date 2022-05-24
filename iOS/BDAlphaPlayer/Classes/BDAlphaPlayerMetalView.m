@@ -155,7 +155,7 @@
     // 播放音频
     if (output.audioItem) {
         AVAudioSession *session = [AVAudioSession sharedInstance];
-        [session setCategory:AVAudioSessionCategoryPlayback error:nil];
+        // [session setCategory:AVAudioSessionCategoryPlayback error:nil];
         [session setActive:YES error:nil];
         
         self.audioPlayer = [[AVPlayer alloc] initWithPlayerItem:output.audioItem];
